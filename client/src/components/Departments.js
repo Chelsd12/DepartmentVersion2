@@ -14,7 +14,7 @@ class Departments extends React.Component {
 
     renderDepartments = () => {
         return this.state.departments.map( d => (
-            <Link to={`/departments/${d.id}`}>
+            <Link to={`/departments/${d.id}/items`} key={d.id}>
                 <li>{ d.name }</li>
             </Link>
         ));//end of return

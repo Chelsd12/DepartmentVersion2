@@ -3,16 +3,34 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 class Department extends React.Component {
-    state = { department: {} };
+    state = { department: [], items: [] };
 
     componentDidMount() {
         const { id } = this.props.match.params;
         axios.get(`/api/departments/${id}`)
-            .then( res => {
-                this.setState({ department: res.data });
-            })//end of axios.get
-    };//end of componentDidMount
+        .then(res => {
+            this.setState({
+                department: res.data.name
+            })
+        })
+        this.getItems();
+    };
 
+    getItems = () => {
+        let {id} = this.props.match.params;
+        axios.get(`/api/departments/${id}/items`)
+        .then(res => this.setState({items: res.data}))
+    };
+
+    renderItems = () => {
+        const { id } = this.props.match.params;
+        return this.state.items.map( i => (
+                <Link to={`/departments/${id}/items/${i.id}`} >
+                <li>{ i.name }</li>
+                </Link>  
+        ));//end of return
+    };//end of renderDepartments
+    
     handleDelete = () => {
         const { id } = this.props.match.params;
         axios.delete(`/api/departments/${id}`)
@@ -22,12 +40,15 @@ class Department extends React.Component {
       };//end of handleDelete
 
     render() {
-        const { id, name } = this.state.department;
-        
+        const { department } = this.state;
+        const { id } = this.props.match.params;
         return (
             <div>
-                <h1>{ name }</h1>
                 <br />
+                <h1>{ department }</h1>
+                <ul>
+                { this.renderItems() }
+                </ul>
                 <Link to={`/departments/${id}/edit`}>
                 <button>Edit</button>
                 </Link>
