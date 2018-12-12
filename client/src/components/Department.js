@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Header } from 'semantic-ui-react';
 
 class Department extends React.Component {
     state = { department: [], items: [] };
@@ -45,7 +46,7 @@ class Department extends React.Component {
         return (
             <div>
                 <br />
-                <h1>{ department }</h1>
+                <Header>{ department }</Header>
                 <ul>
                 { this.renderItems() }
                 </ul>

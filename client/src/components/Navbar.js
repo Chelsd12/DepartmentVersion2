@@ -34,7 +34,6 @@ const Navbar = () => (
 
 const styles = {
     active: {
-        textDecoration: "none",
         fontWeight: "bold",
         color: "purple"
     }//end of active

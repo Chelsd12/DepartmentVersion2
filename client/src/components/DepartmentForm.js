@@ -1,18 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import { Container, Form } from 'semantic-ui-react';
 
 class DepartmentForm extends React.Component {
     state = { name: "" };
-
-    componentDidMount() {
-        const { id } = this.props.match.params;
-        if (id)
-        axios.get(`/api/departments/${id}`)
-            .then( res => {
-                const { name } = res.data;
-                this.setState({ name });
-            })//end of axios.get
-    };//end of componentDidMount
 
     handleChange = (e) => {
         const { target: { name, value } } = e;
@@ -40,18 +31,21 @@ class DepartmentForm extends React.Component {
     render() {
         const { name } = this.state;
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input 
-                    name="name"
-                    placeholder="Name"
-                    value={name}
-                    onChange={this.handleChange}
-                    required
-                />
-                <button>Submit</button>
-            </form>
+            <Container>
+                <Form onSubmit={this.handleSubmit}>
+                    <Form.Input 
+                        name="name"
+                        placeholder="Name"
+                        value={name}
+                        onChange={this.handleChange}
+                        required
+                    />
+                    <Form.Button>Submit</Form.Button>
+                </Form>
+            </Container>
         )//end of return
     };//end of render
 };// end of class Form
+
 
 export default DepartmentForm;
