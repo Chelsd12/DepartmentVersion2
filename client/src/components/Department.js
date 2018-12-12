@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import ItemCard from './ItemCard';
 import { Link } from 'react-router-dom';
-import { Header } from 'semantic-ui-react';
+import styled from "styled-components";
+import { Header, Container, Button, Icon, Card } from 'semantic-ui-react';
 
 class Department extends React.Component {
     state = { department: [], items: [] };
@@ -26,37 +28,46 @@ class Department extends React.Component {
     renderItems = () => {
         const { id } = this.props.match.params;
         return this.state.items.map( i => (
-                <Link to={`/departments/${id}/items/${i.id}`} >
-                <li>{ i.name }</li>
-                </Link>  
+            <ItemCard key={i.id} { ...i } remove={this.removeItem} />
         ));//end of return
     };//end of renderDepartments
-    
-    handleDelete = () => {
-        const { id } = this.props.match.params;
-        axios.delete(`/api/departments/${id}`)
-          .then( res => {
-            this.props.history.push("/departments");
-          })
-      };//end of handleDelete
+
+    removeItem = (id) => {
+        const remove = window.confirm("Are you sure you want to delete this item?")
+        if (remove)
+        axios.delete(`api/departments/${this.props.match.params.id}/items/${id}`)
+            .then( res => {
+                const items = this.state.items.filter( i => {
+                    if (i.id !== id)
+                        return i;
+                })
+                this.setState({ items });
+            })
+    };//end of removeItem
 
     render() {
         const { department } = this.state;
         const { id } = this.props.match.params;
         return (
-            <div>
-                <br />
-                <Header>{ department }</Header>
-                <ul>
+            <Container>
+                <Title>{ department }</Title>
+                <Card.Group itemsPerRow={3}>
                 { this.renderItems() }
-                </ul>
-                <Link to={`/departments/${id}/edit`}>
-                <button>Edit</button>
+                </Card.Group>
+                <Link to={`/departments/${id}/items/new`}>
+                <Button icon color="green">
+                    <Icon name="add" />
+                        Add Item
+                </Button>
                 </Link>
-                <button onClick={this.handleDelete}>Delete</button>
-            </div>
+            </Container>
         )//end of return
-    };//end of render
+    };//end of render   
 };//end of class Department 
+
+const Title = styled.h1`
+  font-size: 2em !important;
+  text-align: left !important;
+`;
 
 export default Department;

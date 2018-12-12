@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Container, Form } from 'semantic-ui-react';
+import { Container, Form, Header } from 'semantic-ui-react';
 
 class DepartmentForm extends React.Component {
     state = { name: "" };
@@ -32,6 +32,7 @@ class DepartmentForm extends React.Component {
         const { name } = this.state;
         return (
             <Container>
+                <Header>Add New Department</Header>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Input 
                         name="name"

@@ -14,24 +14,51 @@ class Departments extends React.Component {
             })
     };//end of componentDidMount
 
+    handleDelete = () => {
+        const { id } = this.state;
+        const remove = window.confirm("Are you sure you want to delete this department?")
+        if (remove)
+        axios.delete(`/api/departments/${id}`)
+          .then( res => {
+            const departments = this.state.departments.filer( d => {
+                if (d.id !== id)
+                return d;
+            })
+            this.setState({ departments });
+          })
+    };//end of handleDelete
+
     renderDepartments = () => {
+        const { id } = this.state;
         return this.state.departments.map( d => (
             <Card>
                 <Card.Header>
                     <Link to={`/departments/${d.id}/items`} key={d.id}>
-                        <ul>{ d.name }</ul>
+                        <Title>{ d.name }</Title>
                     </Link>
                 </Card.Header>
+                <Card.Content textAlign="center">
+                <Link to={`/departments/${id}/edit`}>
+                <Button icon inverted color="blue">
+                    <Icon name="pencil" />
+                        Edit
+                </Button>
+                </Link>
+                <Button icon inverted color="red" onClick={this.handleDelete}>
+                    <Icon name="trash" />
+                        Delete
+                </Button>
+                </Card.Content>
             </Card>
         ));//end of return
     };//end of renderDepartments
 
     render() {
         return (
-            <Container>
+            <Container textAlign="center">
                 <br />
                 <Link to="/departments/new">
-                <Button icon color="blue">
+                <Button icon color="green">
                     <Icon name="add" />
                         New Department
                 </Button>
@@ -39,7 +66,7 @@ class Departments extends React.Component {
                 <br />
                 <br />
                 <br />
-                <Card.Group>   
+                <Card.Group> 
                     { this.renderDepartments() }
                 </Card.Group>
             </Container>
@@ -47,10 +74,9 @@ class Departments extends React.Component {
     };//end of render
 };//end of class Departments
 
-// const ButtonLink = styled.a`
-//   float: left;
-//   padding: 10px 30px;
-//   border-radius: 10px;
-// `;
+const Title = styled.h1`
+  font-size: 1.5em !important;
+  text-align: center !important;
+`;
 
 export default Departments;
