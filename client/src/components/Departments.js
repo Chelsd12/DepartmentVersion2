@@ -32,22 +32,28 @@ class Departments extends React.Component {
         const { id } = this.state;
         return this.state.departments.map( d => (
             <Card>
-                <Card.Header>
-                    <Link to={`/departments/${d.id}/items`} key={d.id}>
-                        <Title>{ d.name }</Title>
-                    </Link>
-                </Card.Header>
                 <Card.Content textAlign="center">
-                <Link to={`/departments/${id}/edit`}>
-                <Button icon inverted color="blue">
-                    <Icon name="pencil" />
-                        Edit
-                </Button>
-                </Link>
-                <Button icon inverted color="red" onClick={this.handleDelete}>
-                    <Icon name="trash" />
-                        Delete
-                </Button>
+                <Card.Header>
+                        <Title>{ d.name }</Title>
+                    <br />
+                </Card.Header>
+                    <Link to={`/departments/${d.id}/items`} key={d.id}>
+                        <Button color="blue">
+                            View
+                        </Button>
+                    </Link>
+                </Card.Content>
+                <Card.Content textAlign="center">
+                    <Link to={`/departments/${id}/edit`}>
+                        <Button icon inverted color="blue">
+                            <Icon name="pencil" />
+                                Edit
+                        </Button>
+                    </Link>
+                        <Button icon inverted color="red" onClick={this.handleDelete}>
+                            <Icon name="trash" />
+                                Delete
+                        </Button>
                 </Card.Content>
             </Card>
         ));//end of return
