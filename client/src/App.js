@@ -9,7 +9,7 @@ import Department from './components/Department';
 import DepartmentForm from './components/DepartmentForm';
 import Item from './components/Item';
 import NoMatch from './components/NoMatch';
-import styled from "styled-components";
+import styled from 'styled-components';
 
 
 const App = () => (
@@ -34,4 +34,5 @@ const AppContainer = styled.div`
   background: linear-gradient(to bottom right, white, purple);
   height: 250vh;
 `;
+
 export default App;
