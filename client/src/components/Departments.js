@@ -14,18 +14,17 @@ class Departments extends React.Component {
             })
     };//end of componentDidMount
 
-    handleDelete = () => {
-        const { id } = this.state;
+    handleDelete = (id) => {
         const remove = window.confirm("Are you sure you want to delete this department?")
         if (remove)
         axios.delete(`/api/departments/${id}`)
-          .then( res => {
-            const departments = this.state.departments.filer( d => {
-                if (d.id !== id)
-                return d;
-            })
-            this.setState({ departments });
-          })
+        .then( res => this.props.history.push("/departments"))
+        //     const departments = this.state.departments.filer( d => {
+        //         if (d.id !== id)
+        //         return d;
+        //     })
+        //     this.setState({ departments });
+        //   })
     };//end of handleDelete
 
     renderDepartments = () => {
@@ -50,7 +49,7 @@ class Departments extends React.Component {
                                 Edit
                         </Button>
                     </Link>
-                        <Button icon inverted color="red" onClick={this.handleDelete}>
+                        <Button icon inverted color="red" onClick={() => this.handleDelete(d.id)}>
                             <Icon name="trash" />
                                 Delete
                         </Button>

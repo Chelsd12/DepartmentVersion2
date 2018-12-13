@@ -25,25 +25,44 @@ class Department extends React.Component {
         .then(res => this.setState({items: res.data}))
     };
 
+    removeItem = (id) => {
+        const remove = window.confirm("Are you sure you want to delete this item?");
+        const dId = this.props.match.params.id;
+        if (remove)
+          axios.delete(`/api/departments/${dId}/items/${id}`)
+            .then( res => {
+              const items = this.state.items.filter( i => {
+                if (i.id !== id)
+                  return i;
+              })
+              this.setState({ items, });
+            })
+      };//end of removeItem
+
     renderItems = () => {
         const { id } = this.props.match.params;
-        return this.state.items.map( i => (
-            <ItemCard key={i.id} { ...i } remove={this.removeItem} />
-        ));//end of return
+        return this.state.items.map( p => (
+            <Card>
+            <Card.Content>
+              <Card.Header>{p.name}</Card.Header>
+              <br />
+              <Card.Content extra>${p.price}</Card.Content>
+              <br />
+              <Card.Description>{p.description}</Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div className="ui two buttons">
+                <Button inverted color="blue">
+                  Edit
+                </Button>
+                <Button inverted color="red" onClick={() => this.removeItem(p.id)}>
+                  Delete
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>        
+          ));//end of return
     };//end of renderDepartments
-
-    removeItem = (id) => {
-        const remove = window.confirm("Are you sure you want to delete this item?")
-        if (remove)
-        axios.delete(`api/departments/${this.props.match.params.id}/items/${id}`)
-            .then( res => {
-                const items = this.state.items.filter( i => {
-                    if (i.id !== id)
-                        return i;
-                })
-                this.setState({ items });
-            })
-    };//end of removeItem
 
     render() {
         const { department } = this.state;

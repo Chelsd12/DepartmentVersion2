@@ -3,7 +3,16 @@ import axios from 'axios';
 import { Container, Form, Header } from 'semantic-ui-react';
 
 class DepartmentForm extends React.Component {
-    state = { name: "" };
+    state = { name: "", description: "" };
+
+    componentDidMount() {
+        const { id } = this.state
+        if (id)
+            axios.get(`/api/departments/${id}`)
+                .then(res => {
+                    this.setState({ ...res.data })
+                })
+    };//end of componentDidMount
 
     handleChange = (e) => {
         const { target: { name, value } } = e;
@@ -17,11 +26,11 @@ class DepartmentForm extends React.Component {
         if (id) {
             axios.put(`/api/departments/${id}`, department)
                 .then( res => {
-                    this.props.history.push(`/departments/${id}`)
+                    this.props.history.push("/departments/${id}")
                 })//end of axios.put
         }
         else {
-            axios.post("/api/departments", department)
+            axios.post(`/api/departments`, department)
                 .then( res => {
                     this.props.history.push("/departments")
                 })
@@ -29,10 +38,10 @@ class DepartmentForm extends React.Component {
     };//end of handleSubmit
 
     render() {
-        const { name } = this.state;
+        const { name, description } = this.state;
         return (
             <Container>
-                <Header>Add New Department</Header>
+                <Header>Department Form</Header>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Input 
                         name="name"
@@ -41,7 +50,14 @@ class DepartmentForm extends React.Component {
                         onChange={this.handleChange}
                         required
                     />
-                    <Form.Button>Submit</Form.Button>
+                    <Form.Input 
+                        name="description"
+                        placeholder="Description"
+                        value={description}
+                        onChange={this.handleChange}
+                        required
+                    />
+                    <Form.Button color="green">Submit</Form.Button>
                 </Form>
             </Container>
         )//end of return

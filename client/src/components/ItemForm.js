@@ -3,7 +3,16 @@ import axios from 'axios';
 import { Form } from 'semantic-ui-react';
 
 class ItemForm extends React.Component {
-    state = { name: "", description: "", price: "" };
+    state = { name: "", description: "", price: "", image: "" };
+
+    componentDidMount() {
+        const { id, itemId } = this.props.match.params
+        if (itemId)
+            axios.get(`/api/departments/${id}/items/${itemId}`)
+                .then(res => {
+                    this.setState({ ...res.data })
+                })
+    };//end of componentDidMount
 
     handleChange = (e) => {
         const { target: { name, value } } = e;
@@ -12,18 +21,22 @@ class ItemForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { id } = this.props.match.params;
+        const { match: { params: { id, itemId } }, history: { push } } = this.props;
+        if (itemId) {
+            axios.put(`/api/departments/${id}/items/${itemId}`, {...this.state})
+                .then (res => push(`/department/${id}`))
+        } else 
         axios.post(`/api/departments/${id}/items`, { ...this.state })
         .then( res => {
-                    this.props.history.push(`/departments/${id}`)
+                    push(`/departments/${id}`)
                 })
     };//end of handleSubmit
 
     render() {
-        const { name, description, price } = this.state;
+        const { name, description, price, Image, itemId } = this.state;
         return (
             <div>
-                <h1>Add Item</h1>
+                <h1>{itemId ? "Edit Item" : "Add Item"}</h1>
                 <Form onSubmit={this.handleSubmit}>
                 <Form.Group widths="equal">
                     <Form.Input
@@ -47,8 +60,15 @@ class ItemForm extends React.Component {
                     value={price}
                     onChange={this.handleChange}
                     />
+                    <Form.Input
+                    name="image"
+                    placeholder="Image"
+                    required
+                    value={Image}
+                    onChange={this.handleChange}
+                    />
                 </Form.Group>
-                <Form.Button color="green">Sumit</Form.Button>
+                <Form.Button color="green">Submit</Form.Button>
                 </Form>
             </div>
         )//end of return
