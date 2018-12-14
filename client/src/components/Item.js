@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Card, Image, Grid } from 'semantic-ui-react';
+import { Card, Image, Grid, Segment } from 'semantic-ui-react';
 
 class Item extends React.Component {
     state = { item: {}, reviews: [] };
@@ -12,7 +12,17 @@ class Item extends React.Component {
             .then(res =>{
                 this.setState({ item: res.data })
             })
+        axios.get(`/api/items/${this.props.match.params.item.id}/reviews`)
+            .then(res => {
+                this.setState({ reviews: res.data })
+            })
     };//end of componentDidMount
+
+    // renderReviews = () => {
+    //     return this.state.reviews.map( r => (
+
+    //     ))
+    // };//end of renderReviews
 
     render() {
         const { name, description, price, image } = this.state.item;
@@ -33,9 +43,9 @@ class Item extends React.Component {
             </Card>
             </Grid.Column>
             <Grid.Column>
-                <div>
-                    Reviews
-                </div>
+                <Segment textAlign="center">
+                    <h1>{ this.renderReviews}</h1>
+                </Segment>
             </Grid.Column>
             </Grid.Row>
             </Grid>

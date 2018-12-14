@@ -14,29 +14,33 @@ class Departments extends React.Component {
             })
     };//end of componentDidMount
 
-    handleDelete = (id) => {
-        const remove = window.confirm("Are you sure you want to delete this department?")
-        if (remove)
-        axios.delete(`/api/departments/${id}`)
-        .then( res => this.props.history.push("/departments"))
-        //     const departments = this.state.departments.filer( d => {
-        //         if (d.id !== id)
-        //         return d;
-        //     })
-        //     this.setState({ departments });
-        //   })
-    };//end of handleDelete
+    // handleDelete = (id) => {
+    //     const remove = window.confirm("Are you sure you want to delete this department?")
+    //     if (remove)
+    //     axios.delete(`/api/departments/${id}`)
+    //     .then( res => this.props.history.push("/departments"))
+    //         const departments = this.state.departments.filer( d => {
+    //             if (d.id !== id)
+    //             return d;
+    //         })
+    //         this.setState({ departments });
+    //       }
+    //     };//end of handleDelete
 
     renderDepartments = () => {
         const { id } = this.state;
         return this.state.departments.map( d => (
             <Card>
                 <Card.Content textAlign="center">
-                <Card.Header>
-                        <Title>{ d.name }</Title>
-                    <br />
-                </Card.Header>
-                    <Link to={`/departments/${d.id}/items`} key={d.id}>
+                    <Card.Header>
+                            <Title>{ d.name }</Title>
+                    </Card.Header>
+                    <Card.Description>
+                            { d.description }
+                    </Card.Description>
+                </Card.Content>
+                <Card.Content textAlign="center">
+                    <Link to={`/departments/${d.id}`}>
                         <Button color="blue">
                             View
                         </Button>
@@ -57,16 +61,15 @@ class Departments extends React.Component {
             </Card>
         ));//end of return
     };//end of renderDepartments
-
+    
     render() {
         return (
-            <Container textAlign="center">
-                <br />
+            <Container>
                 <Link to="/departments/new">
-                <Button icon color="green">
-                    <Icon name="add" />
-                        New Department
-                </Button>
+                    <Button icon color="green">
+                        <Icon name="add" />
+                            New Department
+                    </Button>
                 </Link>
                 <br />
                 <br />

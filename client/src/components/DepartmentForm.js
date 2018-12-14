@@ -3,11 +3,11 @@ import axios from 'axios';
 import { Container, Form, Header } from 'semantic-ui-react';
 
 class DepartmentForm extends React.Component {
-    state = { name: "", description: "" };
+    state = { name: "", description: "", image: "" };
 
     componentDidMount() {
-        const { id } = this.state
-        if (id)
+        const { id } = this.props.match.params;
+        if (this.props.edit)
             axios.get(`/api/departments/${id}`)
                 .then(res => {
                     this.setState({ ...res.data })
@@ -23,22 +23,22 @@ class DepartmentForm extends React.Component {
         e.preventDefault();
         const department = { ...this.state };
         const { id } = this.props.match.params;
-        if (id) {
+        if (this.props.edit) {
             axios.put(`/api/departments/${id}`, department)
                 .then( res => {
-                    this.props.history.push("/departments/${id}")
+                    this.props.history.push("/departments/${res.data.id}")
                 })//end of axios.put
         }
         else {
             axios.post(`/api/departments`, department)
                 .then( res => {
-                    this.props.history.push("/departments")
+                    this.props.history.push("/departments/${res.data.id}")
                 })
         };//end of if statement 
     };//end of handleSubmit
 
     render() {
-        const { name, description } = this.state;
+        const { name, description, image } = this.state;
         return (
             <Container>
                 <Header>Department Form</Header>

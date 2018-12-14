@@ -14,20 +14,20 @@ const ItemCard = ({ id, name, description, price, image, remove, department_id }
       <Card.Image>{image}</Card.Image>
     </Card.Content>
     <Card.Content extra>
-      <div className="ui two buttons">
-        <Link to={`/departments/${department_id}/items/${id}`}>
-        <Button inverted color="orange">
-          View
-        </Button>
-        </Link>
+      <div className="ui three buttons">
         <Link to={`/departments/${department_id}/items/${id}/edit`}>
-        <Button inverted color="blue">
-          Edit
-        </Button>
+          <Button inverted color="blue">
+            Edit
+          </Button>
         </Link>
-        <Button inverted color="red" onClick={() => remove(id)}>
-          Delete
-        </Button>
+        <Link to={`/departments/${department_id}/items/${id}`}>
+          <Button inverted color="orange">
+            View
+          </Button>
+        </Link>
+          <Button inverted color="red" onClick={() => remove(id)}>
+            Delete
+          </Button>
       </div>
     </Card.Content>
   </Card>

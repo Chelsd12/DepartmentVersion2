@@ -40,7 +40,7 @@ class Department extends React.Component {
       };//end of removeItem
 
     renderItems = () => {
-        const { id } = this.props.match.params;
+        const { id, item_id } = this.props.match.params;
         return this.state.items.map( p => (
             <Card>
             <Card.Content>
@@ -51,14 +51,21 @@ class Department extends React.Component {
               <Card.Description>{p.description}</Card.Description>
             </Card.Content>
             <Card.Content extra>
-              <div className="ui two buttons">
-                <Button inverted color="blue">
-                  Edit
-                </Button>
-                <Button inverted color="red" onClick={() => this.removeItem(p.id)}>
-                  Delete
-                </Button>
-              </div>
+            <div className="ui three buttons">
+        <Link to={`/departments/${id}/items/${id}/edit`}>
+          <Button inverted color="blue">
+            Edit
+          </Button>
+        </Link>
+        <Link to={`/departments/${id}/items/${item_id}`}>
+          <Button inverted color="orange">
+            View
+          </Button>
+        </Link>
+          <Button inverted color="red" onClick={this.removeItem}>
+            Delete
+          </Button>
+      </div>
             </Card.Content>
           </Card>        
           ));//end of return
