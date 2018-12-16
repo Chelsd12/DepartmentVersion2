@@ -8,8 +8,7 @@
     i = d.items.create(
     name: Faker::Commerce.product_name,
     description: Faker::FamousLastWords.last_words,
-    price: Faker::Commerce.price.to_f,
-    image: Faker::Avatar.image("my-own-slug", "50x50", "jpg")
+    price: Faker::Commerce.price.to_f
     )
 
 5.times do

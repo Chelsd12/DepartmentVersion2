@@ -1,47 +1,39 @@
 import React from 'react';
 import axios from 'axios';
-import { Container, Form, Header } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 class DepartmentForm extends React.Component {
-    state = { name: "", description: "", image: "" };
+    state = { name: "", description: "" };
 
     componentDidMount() {
-        const { id } = this.props.match.params;
         if (this.props.edit)
-            axios.get(`/api/departments/${id}`)
+            axios.get(`/api/departments/${this.props.match.params.id}/items`)
                 .then(res => {
                     this.setState({ ...res.data })
                 })
     };//end of componentDidMount
 
     handleChange = (e) => {
-        const { target: { name, value } } = e;
+        const { name, value } = e.target;
         this.setState({ [name]: value });
     };//end of handleChange
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const department = { ...this.state };
-        const { id } = this.props.match.params;
         if (this.props.edit) {
-            axios.put(`/api/departments/${id}`, department)
-                .then( res => {
-                    this.props.history.push("/departments/${res.data.id}")
-                })//end of axios.put
+          axios.put(`/api/departments/${this.props.match.params.id}`, { ...this.state })
+            .then(res => this.props.history.push(`/departments`))
+        } else {
+          axios.post(`/api/departments`, { ...this.state })
+            .then(res => this.props.history.push(`/departments`))
         }
-        else {
-            axios.post(`/api/departments`, department)
-                .then( res => {
-                    this.props.history.push("/departments/${res.data.id}")
-                })
-        };//end of if statement 
-    };//end of handleSubmit
+      };//end of handleSubmit
 
     render() {
-        const { name, description, image } = this.state;
+        const { id, name, description } = this.state;
         return (
-            <Container>
-                <Header>Department Form</Header>
+            <div>
+                <h1>{ id ? "Edit Department" : "Add Department"}</h1>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Input 
                         name="name"
@@ -59,7 +51,7 @@ class DepartmentForm extends React.Component {
                     />
                     <Form.Button color="green">Submit</Form.Button>
                 </Form>
-            </Container>
+            </div>
         )//end of return
     };//end of render
 };// end of class Form

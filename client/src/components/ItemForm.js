@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Form } from 'semantic-ui-react';
 
 class ItemForm extends React.Component {
-    state = { name: "", description: "", price: "", image: "" };
+    state = { name: "", description: "", price: "", image_url: "" };
 
     componentDidMount() {
         const { id, itemId } = this.props.match.params
@@ -24,16 +24,18 @@ class ItemForm extends React.Component {
         const { match: { params: { id, itemId } }, history: { push } } = this.props;
         if (itemId) {
             axios.put(`/api/departments/${id}/items/${itemId}`, {...this.state})
-                .then (res => push(`/department/${id}`))
-        } else 
+                .then (res => push(`/departments/${id}`))
+        } else {
         axios.post(`/api/departments/${id}/items`, { ...this.state })
         .then( res => {
                     push(`/departments/${id}`)
                 })
+        }
     };//end of handleSubmit
-
+    
     render() {
-        const { name, description, price, Image, itemId } = this.state;
+        const { name, description, price, image_url } = this.state;
+        const { id, itemId } = this.props.match.params;
         return (
             <div>
                 <h1>{itemId ? "Edit Item" : "Add Item"}</h1>
@@ -42,6 +44,7 @@ class ItemForm extends React.Component {
                     <Form.Input
                     name="name"
                     placeholder="Name"
+                    label="Name"
                     required
                     value={name}
                     onChange={this.handleChange}
@@ -49,22 +52,27 @@ class ItemForm extends React.Component {
                    <Form.Input
                     name="description"
                     placeholder="Description"
+                    label="Description"
                     required
                     value={description}
                     onChange={this.handleChange}
                     />
+                </Form.Group>
+                <Form.Group widths="equal">
                     <Form.Input
                     name="price"
                     placeholder="Price"
+                    label="Price"
                     required
                     value={price}
                     onChange={this.handleChange}
                     />
                     <Form.Input
-                    name="image"
-                    placeholder="Image"
+                    name="image_url"
+                    placeholder="Image_url"
+                    label="Image Url"
                     required
-                    value={Image}
+                    value={image_url}
                     onChange={this.handleChange}
                     />
                 </Form.Group>

@@ -1,99 +1,74 @@
 import React from 'react';
 import axios from 'axios';
-import ItemCard from './ItemCard';
 import { Link } from 'react-router-dom';
-import styled from "styled-components";
-import { Header, Container, Button, Icon, Card } from 'semantic-ui-react';
+import ItemCard from "./ItemCard";
+import { Button, Icon, Card, Image } from 'semantic-ui-react';
 
 class Department extends React.Component {
-    state = { department: [], items: [] };
+    state = { department: {}, items: [] };
 
     componentDidMount() {
         const { id } = this.props.match.params;
         axios.get(`/api/departments/${id}`)
-        .then(res => {
-            this.setState({
-                department: res.data.name
+            .then(res => {
+                this.setState({
+                    department: res.data.name
             })
         })
         this.getItems();
-    };
+    };//end of componentDidMount
 
     getItems = () => {
         let {id} = this.props.match.params;
         axios.get(`/api/departments/${id}/items`)
-        .then(res => this.setState({items: res.data}))
-    };
+            .then(res => this.setState({items: res.data}))
+    };//end of getItems
+
+    renderItems = () => {
+      return this.state.items.map( i => (
+        <ItemCard key={i.id} { ...i } remove={this.removeItem} />
+      ))
+    };//end of renderItems
 
     removeItem = (id) => {
         const remove = window.confirm("Are you sure you want to delete this item?");
         const dId = this.props.match.params.id;
         if (remove)
-          axios.delete(`/api/departments/${dId}/items/${id}`)
+            axios.delete(`/api/departments/${dId}/items/${id}`)
             .then( res => {
-              const items = this.state.items.filter( i => {
-                if (i.id !== id)
-                  return i;
-              })
-              this.setState({ items, });
+                const items = this.state.items.filter( i => {
+                    if (i.id !== id)
+                    return i;
+                })
+                this.setState({ items, });
             })
-      };//end of removeItem
+    };//end of removeItem
 
-    renderItems = () => {
-        const { id, item_id } = this.props.match.params;
-        return this.state.items.map( p => (
-            <Card>
-            <Card.Content>
-              <Card.Header>{p.name}</Card.Header>
-              <br />
-              <Card.Content extra>${p.price}</Card.Content>
-              <br />
-              <Card.Description>{p.description}</Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-            <div className="ui three buttons">
-        <Link to={`/departments/${id}/items/${id}/edit`}>
-          <Button inverted color="blue">
-            Edit
+  render() {
+    const { department: { id, name, description, } } = this.state;
+    return (
+      <div>
+        <div style={{ display: "flex", width: "100%", justifyContent: "space-between" }}>
+          <h1>{ name }</h1> 
+        </div>
+        <br />
+        <h4>{ description }</h4>
+        <br />
+        <br />
+        <Link to={`/departments/${id}/items/new`}>
+          <Button icon color="green">
+            <Icon name="add" />
+            Add Item
           </Button>
         </Link>
-        <Link to={`/departments/${id}/items/${item_id}`}>
-          <Button inverted color="orange">
-            View
-          </Button>
-        </Link>
-          <Button inverted color="red" onClick={this.removeItem}>
-            Delete
-          </Button>
+        <br />
+        <br />
+        <Card.Group itemsPerRow={4}>
+          { this.renderItems() }
+        </Card.Group>
       </div>
-            </Card.Content>
-          </Card>        
-          ));//end of return
-    };//end of renderDepartments
-
-    render() {
-        const { department } = this.state;
-        const { id } = this.props.match.params;
-        return (
-            <Container>
-                <Title>{ department }</Title>
-                <Card.Group itemsPerRow={3}>
-                { this.renderItems() }
-                </Card.Group>
-                <Link to={`/departments/${id}/items/new`}>
-                <Button icon color="green">
-                    <Icon name="add" />
-                        Add Item
-                </Button>
-                </Link>
-            </Container>
-        )//end of return
-    };//end of render   
-};//end of class Department 
-
-const Title = styled.h1`
-  font-size: 2em !important;
-  text-align: left !important;
-`;
+    )//end of return
+  };//end of render
+};//end of class Department
 
 export default Department;
